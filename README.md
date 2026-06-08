@@ -1,96 +1,94 @@
 # IT-Support-Specialist-Recruitment-Pipeline
-# Recruitment Funnel Analytics Workflow
-
-## Project Overview
-
-This n8n workflow automates recruitment pipeline monitoring and candidate analysis. It reads recruitment data from Google Sheets, evaluates candidate progress using AI agents, identifies hiring bottlenecks, scores candidates, and automatically sends strategic reports to the HR Director.
-
----
+# Recruitment Funnel Automation System
 
 ## Project Structure
 
-### Data Sources
+This project consists of three interconnected n8n workflows:
 
-* **Applicants Sheet** – Candidate information, skills, education, experience, and current stage.
-* **Interview Feedback Sheet** – Interview results and sentiment analysis.
-* **Historical Data Sheet** – Historical recruitment metrics and stage benchmarks.
+### 1. Form Filling Workflow
 
-### Workflow Components
+Collects applicant information through an online application form and updates the Applicants Google Sheet.
 
-1. **Schedule Trigger**
+**Components**
 
-   * Runs automatically every Friday at 7:00 AM.
+* Form Trigger
+* Google Sheets Update Node
 
-2. **Data Collection**
+### 2. Recruitment Funnel Workflow
 
-   * Reads data from Google Sheets.
+Analyzes recruitment data and generates hiring insights.
 
-3. **Data Merging**
+**Components**
 
-   * Combines applicant, interview feedback, and historical data.
+* Schedule Trigger (Weekly Friday 7:00 AM)
+* Google Sheets Data Readers
+* Merge Nodes
+* AI Recruitment Assessment Agents
+* Candidate Fit Scoring Agent
+* Strategic Advisor Agent
+* Gmail Notification Nodes
+* Aggregate and Routing Logic
 
-4. **Pipeline Assessment Agent**
+### 3. Error Handling Workflow
 
-   * Determines whether candidates are Healthy or Stalled.
-   * Identifies recruitment risks.
+Captures workflow failures, analyzes them using AI, and stores error logs in Google Sheets.
 
-5. **Fit Score Agent**
+**Components**
 
-   * Calculates candidate fit score.
-   * Assigns fit category.
-   * Estimates time-to-hire.
-
-6. **Strategic Advisor Agent**
-
-   * Analyzes aggregated recruitment metrics.
-   * Identifies bottleneck stages.
-   * Generates strategic recommendations.
-
-7. **Email Notifications**
-
-   * Sends high-fit candidate alerts.
-   * Sends strategic bottleneck reports.
+* Error Trigger
+* AI Error Summarizer
+* Structured Output Parser
+* Google Sheets Error Log
 
 ---
 
-## Installation Instructions
+# Installation Instructions
 
-### Prerequisites
+## Prerequisites
 
-* n8n installed
+Before importing the workflows, ensure you have:
+
+* n8n installed and running
 * Google account
+* Gmail account
 * OpenRouter API account
 * Mistral AI account
-* Gmail account for notifications
+* Access to Google Sheets
 
-### Import Workflow
+## Importing the Workflows
 
 1. Open n8n.
-2. Select **Import Workflow**.
-3. Upload `Recruitment Funnel.json`.
-4. Save the workflow.
+2. Click **Import Workflow**.
+3. Import:
+
+   * Form Filling.json
+   * Recruitment Funnel.json
+   * ERROR_ Recruitment Funnel & Form Filling.json
+4. Save all workflows.
 
 ---
 
-## Setup and Configuration Steps
+# Setup and Configuration Steps
 
-### Step 1: Configure Google Sheets
+## Step 1: Configure Google Sheets
 
-Create a Google Spreadsheet with:
+Create the following sheets:
 
-#### Applicants Sheet
+### Applicants Sheet
 
 Columns:
 
 * Applicant ID
 * Name
+* Email
+* Phone
+* Skills
 * Current Stage
 * Days in Stage
-* Skills
-* Years of Experience
 * Level of Education
+* Years of Experience
 
-#### Interview Feedback Sheet
+### Interview Feedback Sheet
 
 Columns:
 
@@ -98,177 +96,232 @@ Columns:
 * Sentiment
 * Feedback Notes
 
-#### Historical Data Sheet
+### Historical Data Sheet
 
 Columns:
 
 * Stage
-* Average Time in Stage
 * Required Skills
+* Average Time in Stage
+
+### ErrorHandling Sheet
+
+Columns:
+
+* Date
+* Workflow_name
+* Failed_node
+* Error_summary
+* Likely_cause
+* Severity
+* Suggested_fix
 
 ---
 
-### Step 2: Configure Credentials
+## Step 2: Configure Credentials
 
-#### Google Sheets OAuth2
+### Google Sheets OAuth2
 
-Connect your Google account.
+Connect Google Sheets credentials.
 
-#### Gmail OAuth2
+### Gmail OAuth2
 
-Connect the Gmail account used for notifications.
+Connect Gmail credentials used to send notifications.
 
-#### OpenRouter API
+### OpenRouter API
 
-Add your OpenRouter API credentials.
+Add your OpenRouter API key.
 
-#### Mistral AI
+### Mistral AI
 
-Add your Mistral API credentials.
-
----
-
-### Step 3: Update Email Recipients
-
-Modify the Gmail nodes to use the desired recipient email addresses.
+Add your Mistral API key.
 
 ---
 
-## Environment Requirements
+## Step 3: Configure Email Recipients
 
-| Component           | Version        |
-| ------------------- | -------------- |
-| n8n                 | Latest Stable  |
-| Google Sheets       | OAuth2 Enabled |
-| Gmail               | OAuth2 Enabled |
-| OpenRouter API      | Active Account |
-| Mistral AI API      | Active Account |
-| Internet Connection | Required       |
+Update the Gmail nodes with the desired HR Director email address.
 
 ---
 
-## Usage Guide
+# Environment Requirements
 
-### Running Automatically
+| Requirement     | Description           |
+| --------------- | --------------------- |
+| n8n             | Latest Stable Version |
+| Google Sheets   | OAuth2 Access         |
+| Gmail           | OAuth2 Access         |
+| OpenRouter API  | Active Subscription   |
+| Mistral AI API  | Active Subscription   |
+| Internet Access | Required              |
 
-The workflow executes every Friday at 7:00 AM.
+---
 
-### Running Manually
+# Usage Guide
 
-1. Open the workflow.
-2. Click **Execute Workflow**.
-3. Monitor execution logs.
+## Applicant Submission
 
-### Outputs
+1. Applicant opens the IT Specialist application form.
+2. Applicant enters:
 
-#### Candidate Health Assessment
+   * Name
+   * ID Number
+   * Email Address
+   * Phone Number
+   * Education Level
+   * Years of Experience
+3. Data is automatically written into the Applicants Google Sheet.
+
+---
+
+## Weekly Recruitment Analysis
+
+Every Friday at 7:00 AM:
+
+1. Applicant data is loaded.
+2. Interview feedback is loaded.
+3. Historical recruitment data is loaded.
+4. Data is merged and analyzed.
+
+### Pipeline Assessment
+
+The AI Agent determines whether a candidate is:
 
 * Healthy
 * Stalled
 
-#### Fit Categories
+A candidate is considered stalled if they remain in a stage for more than 7 days.
 
-* High Fit
-* Medium Fit
-* Low Fit
+### Candidate Fit Assessment
 
-#### Strategic Reports
+The AI calculates:
 
-* Bottleneck identification
-* Recruitment recommendations
-* Hiring speed improvements
+* Fit Score (0–100)
+* Fit Category
+
+  * High Fit
+  * Medium Fit
+  * Low Fit
+* Estimated Time to Hire
+* Recruitment Risks
+
+### Strategic Reporting
+
+The Strategic Advisor:
+
+* Identifies recruitment bottlenecks
+* Explains hiring delays
+* Generates recommendations
+* Creates an HTML report
+
+The report is automatically emailed to the HR Director.
 
 ---
 
-## Deployment Instructions
+# Deployment Instructions
 
-### Development Environment
+## Development Environment
 
-1. Import workflow into n8n.
+1. Import workflows into n8n.
 2. Configure credentials.
-3. Test with sample recruitment data.
+3. Connect Google Sheets.
+4. Run test executions.
+5. Verify email delivery.
 
-### Production Environment
+## Production Environment
 
-1. Deploy n8n on a server or cloud instance.
-2. Secure credentials using environment variables.
-3. Enable workflow.
-4. Verify scheduled execution.
-5. Monitor logs regularly.
-
----
-
-## Troubleshooting
-
-### Google Sheets Not Loading
-
-**Possible Causes**
-
-* Incorrect spreadsheet URL
-* OAuth credentials expired
-
-**Solution**
-
-* Reconnect Google Sheets credentials.
-* Verify sheet permissions.
+1. Deploy n8n on a cloud server or VPS.
+2. Store credentials securely.
+3. Enable all workflows.
+4. Configure automatic backups.
+5. Monitor execution logs.
 
 ---
 
-### Emails Not Sending
+# Troubleshooting
 
-**Possible Causes**
+## Google Sheets Connection Error
 
-* Gmail authentication failure
-* Invalid recipient address
+### Cause
 
-**Solution**
+Expired OAuth credentials or incorrect spreadsheet permissions.
 
-* Reauthorize Gmail OAuth2.
-* Verify email configuration.
+### Solution
+
+* Reconnect Google Sheets account.
+* Verify spreadsheet sharing settings.
 
 ---
 
-### AI Agent Errors
+## Gmail Notification Failure
 
-**Possible Causes**
+### Cause
 
-* Invalid API key
-* API rate limits exceeded
+Authentication failure or incorrect email configuration.
 
-**Solution**
+### Solution
 
-* Verify OpenRouter and Mistral credentials.
+* Reconnect Gmail OAuth credentials.
+* Verify recipient email addresses.
+
+---
+
+## AI Model Error
+
+### Cause
+
+Invalid API key or exceeded API limits.
+
+### Solution
+
+* Verify OpenRouter credentials.
+* Verify Mistral credentials.
 * Check API usage limits.
 
 ---
 
-### Missing Candidate Data
+## Candidate Data Not Updating
 
-**Possible Causes**
+### Cause
 
-* Empty spreadsheet rows
-* Incorrect column names
+Applicant ID not found in the Applicants sheet.
 
-**Solution**
+### Solution
 
-* Validate sheet structure.
-* Ensure required columns exist.
+* Verify Applicant ID values.
+* Ensure matching columns are configured correctly.
 
 ---
 
-## Expected Outcome
+## Workflow Failure
 
-The workflow provides automated recruitment intelligence by:
+### Cause
 
-* Monitoring candidate progression
+Node execution error.
+
+### Solution
+
+The Error Handling Workflow automatically:
+
+* Captures the error
+* Uses AI to analyze the failure
+* Generates a human-readable summary
+* Stores the summary in the ErrorHandling Google Sheet
+
+This allows administrators to quickly identify and resolve issues.
+
+---
+
+# Expected Outcomes
+
+The system automates recruitment operations by:
+
+* Collecting applicant information
+* Monitoring candidate progress
 * Detecting stalled candidates
 * Scoring candidate suitability
 * Identifying hiring bottlenecks
-* Sending actionable recruitment reports
-* Improving overall hiring efficiency
+* Sending strategic hiring reports
+* Logging and analyzing workflow errors automatically
 
----
-
-**Author:** Lead Automation Engineer
-**Platform:** n8n
-**Project:** Recruitment Funnel Analytics Workflow
+This improves recruitment efficiency, visibility, and decision-making while reducing manual effort.
