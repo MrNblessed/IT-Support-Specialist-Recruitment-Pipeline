@@ -1,0 +1,310 @@
+{
+  "name": "ERROR: Recruitment Funnel & Form Filling",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "d548afda-0601-495c-aa40-a3a5fb7a8cbd",
+      "name": "Error Trigger"
+    },
+    {
+      "parameters": {
+        "model": "devstral-medium-latest",
+        "options": {
+          "maxTokens": 1000,
+          "temperature": 0.1,
+          "maxRetries": 2,
+          "safeMode": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatMistralCloud",
+      "typeVersion": 1,
+      "position": [
+        352,
+        224
+      ],
+      "id": "a41e2a8f-7fb4-471f-893d-55d666a3370c",
+      "name": "Mistral Cloud Chat Model",
+      "credentials": {
+        "mistralCloudApi": {
+          "id": "ApoEtcO94pIULSq1",
+          "name": "Mistral Cloud account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $now }}",
+        "contextWindowLength": 25
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        480,
+        224
+      ],
+      "id": "a94a86b6-a2b9-4ca9-b65d-575af5765a87",
+      "name": "Simple Memory",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"date\": \"2026-05-26T20:15:33Z\",\n  \"workflow_name\": \"Daily Newsletter Generator\",\n  \"failed_node\": \"OpenAI Chat Model\",\n  \"error_summary\": \"The AI model request failed because the prompt exceeded the maximum token limit.\",\n  \"likely_cause\": \"Too much data was sent to the OpenAI API in a single request.\",\n  \"severity\": \"High\",\n  \"suggested_fix\": \"Reduce the amount of text sent to the AI model or split the processing into smaller batches.\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        608,
+        224
+      ],
+      "id": "be55d32d-95dd-40b1-b80c-a7828a17a2c5",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1qlh4-owBP8r5wbsSr5wHQZsE503_zJ2YY5DdHJY3HYE/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "ErrorHandling",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1qlh4-owBP8r5wbsSr5wHQZsE503_zJ2YY5DdHJY3HYE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $json.output.date }}",
+            "Workflow_name": "={{ $json.output.workflow_name }}",
+            "Failed_node": "={{ $json.output.failed_node }}",
+            "Error_summary": "={{ $json.output.error_summary }}",
+            "Likely_cause": "={{ $json.output.likely_cause }}",
+            "Severity": "={{ $json.output.severity }}",
+            "Suggested_fix": "={{ $json.output.suggested_fix }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Workflow_name",
+              "displayName": "Workflow_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Failed_node",
+              "displayName": "Failed_node",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Error_summary",
+              "displayName": "Error_summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Likely_cause",
+              "displayName": "Likely_cause",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Severity",
+              "displayName": "Severity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Suggested_fix",
+              "displayName": "Suggested_fix",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        816,
+        0
+      ],
+      "id": "980bbc16-249f-4305-89fc-97c40b2fe678",
+      "name": "ERROR Summary",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "e9jzbClwQy2kyOKt",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-oss-120b:free",
+        "options": {
+          "maxTokens": 1000,
+          "temperature": 0.1,
+          "maxRetries": 2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        176,
+        208
+      ],
+      "id": "ac4f8d2d-b064-4c23-b781-fa438a387d1f",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "9YCXWruTwvac9E9u",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze this n8n workflow error and summarize it for logging into Google Sheets.\n\nError Data:\nWorkflow: {{ $json.workflow.name }}\n\nFailed Node: {{ $json.execution.lastNodeExecuted }}\n\nError Message:\n{{ $json.execution.error.message }}\n\nStack Trace:\n{{ $json.execution.error.stack }}\n\nReturn ONLY valid JSON.\n",
+        "hasOutputParser": true,
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "You are an AI Error Analyst for an n8n workflow.\n\nYour task is to:\n1. Analyze raw workflow error data.\n2. Summarize the error in simple human-readable language.\n3. Identify:\n   - workflow name\n   - node that failed\n   - likely cause\n   - severity level\n   - suggested fix\n4. Keep summaries concise and professional.\n5. Always return valid JSON only.\n6. Do not include markdown, explanations, or extra text outside JSON.\n\nSeverity Rules:\n- \"High\" = workflow completely failed or critical API/authentication issue\n- \"Medium\" = partial failure or recoverable issue\n- \"Low\" = temporary/minor issue\n\nOutput Format:\n{\n  \"date\": \"ISO timestamp\",\n  \"workflow_name\": \"string\",\n  \"failed_node\": \"string\",\n  \"error_summary\": \"string\",\n  \"likely_cause\": \"string\",\n  \"severity\": \"High | Medium | Low\",\n  \"suggested_fix\": \"string\"\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        320,
+        0
+      ],
+      "id": "27dcd28e-65fc-456d-9386-773d33579e88",
+      "name": "Error Summarizer"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Error Summarizer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mistral Cloud Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Error Summarizer",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Error Summarizer",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Error Summarizer",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Error Summarizer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Error Summarizer": {
+      "main": [
+        [
+          {
+            "node": "ERROR Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false,
+    "timezone": "Africa/Nairobi"
+  },
+  "versionId": "984c1902-32de-4300-8604-00154bf8109b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5552415fedff332b065ea651397e16d2b3c20a1923c038e7a80d7903dadbac12"
+  },
+  "id": "OXxIxWowK1Q6JvK2",
+  "tags": []
+}

@@ -1,0 +1,247 @@
+{
+  "name": "Form Filling",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "IT Specialist Form",
+        "formDescription": "Please complete this application form for the IT Specialist position. Ensure all information provided is accurate and up to date. Applications with missing information may not be considered.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Applicant's Name",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Applicant's ID",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Applicant's Email Address",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Applicant's Phone Number",
+              "fieldType": "number",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "What is your highest level of education?",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "How many years of experience do you have? ",
+              "fieldType": "number",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "8d20cfad-8308-47a7-8574-ad013c8ff317",
+      "name": "On form submission",
+      "webhookId": "8dcf4303-4de8-40ce-b502-0bac7c340bee"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/16fWtrm_uyHIpFARY23I1HUY2nKZpKxut1tQKW7OimOU/edit?resourcekey=&gid=847775913#gid=847775913",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 847775913,
+          "mode": "list",
+          "cachedResultName": "Applicants",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/16fWtrm_uyHIpFARY23I1HUY2nKZpKxut1tQKW7OimOU/edit#gid=847775913"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Name": "={{ $json['Applicant\\'s Name'] }}",
+            "Email": "={{ $json['Applicant\\'s Email Address'] }}",
+            "Phone": "={{ $json['Applicant\\'s Phone Number'] }}",
+            "Level of Education  ": "={{ $json['What is your highest level of education?'] }}",
+            "Years of Experience": "={{ $json['How many years of experience do you have? '] }}",
+            "Applicant ID": "={{ $json['Applicant\\'s ID'] }}"
+          },
+          "matchingColumns": [
+            "Applicant ID"
+          ],
+          "schema": [
+            {
+              "id": "Applicant ID",
+              "displayName": "Applicant ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone",
+              "displayName": "Phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Position Applied",
+              "displayName": "Position Applied",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Current Stage",
+              "displayName": "Current Stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Days in Stage",
+              "displayName": "Days in Stage",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Application Date",
+              "displayName": "Application Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "University",
+              "displayName": "University",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Skills",
+              "displayName": "Skills",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Level of Education  ",
+              "displayName": "Level of Education  ",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Years of Experience",
+              "displayName": "Years of Experience",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        224,
+        0
+      ],
+      "id": "23f8e6cc-6675-40a4-b8b4-be2692957304",
+      "name": "Update: Applicants",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "e9jzbClwQy2kyOKt",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Update: Applicants",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "OXxIxWowK1Q6JvK2",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "852e2c00-e799-43f2-8128-33d6d0d0c33d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5552415fedff332b065ea651397e16d2b3c20a1923c038e7a80d7903dadbac12"
+  },
+  "id": "b30lqQCpFXRH5pPm",
+  "tags": []
+}
